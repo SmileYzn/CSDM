@@ -60,7 +60,7 @@
     <ClCompile Include="precompiled.cpp">
       <Filter>Precompiled</Filter>
     </ClCompile>
-    <ClCompile Include="Metamod.cpp">
+    <ClCompile Include="MetaMod.cpp">
       <Filter>MetaMod\MetaMod</Filter>
     </ClCompile>
     <ClCompile Include="MetaDLL.cpp">
@@ -93,9 +93,6 @@
     <ClCompile Include="CSDM_SpawnEdit.cpp">
       <Filter>CSDM\CSDM_SpawnEdit</Filter>
     </ClCompile>
-    <ClCompile Include="CSDM_Vampire.cpp">
-      <Filter>CSDM\CSDM_Vampire</Filter>
-    </ClCompile>
     <ClCompile Include="CSDM_Misc.cpp">
       <Filter>CSDM\CSDM_Misc</Filter>
     </ClCompile>
@@ -110,7 +107,7 @@
     <ClInclude Include="precompiled.h">
       <Filter>Precompiled</Filter>
     </ClInclude>
-    <ClInclude Include="Metamod.h">
+    <ClInclude Include="MetaMod.h">
       <Filter>MetaMod\MetaMod</Filter>
     </ClInclude>
     <ClInclude Include="MetaDLL.h">

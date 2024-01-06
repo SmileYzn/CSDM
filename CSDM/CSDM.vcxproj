@@ -96,7 +96,7 @@
     <ClInclude Include="CSDM_Weapon.h" />
     <ClInclude Include="MetaDLL.h" />
     <ClInclude Include="MetaEngine.h" />
-    <ClInclude Include="Metamod.h" />
+    <ClInclude Include="MetaMod.h" />
     <ClInclude Include="precompiled.h" />
     <ClInclude Include="CSDM.h" />
     <ClInclude Include="ReAPI.h" />
@@ -113,7 +113,7 @@
     <ClCompile Include="CSDM_Weapon.cpp" />
     <ClCompile Include="MetaDLL.cpp" />
     <ClCompile Include="MetaEngine.cpp" />
-    <ClCompile Include="Metamod.cpp" />
+    <ClCompile Include="MetaMod.cpp" />
     <ClCompile Include="CSDM.cpp" />
     <ClCompile Include="precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
