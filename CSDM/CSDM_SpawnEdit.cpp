@@ -37,7 +37,7 @@ void CCSDM_SpawnEdit::Menu(CBasePlayer* Player)
 {
 	if (!Q_strcmp(this->m_Admin->string, g_engfuncs.pfnGetPlayerAuthId(Player->edict())))
 	{
-		gCSDM_Menu[Player->entindex()].Create("CSDM: Spawn Manager", false, this->MenuHandle);
+		gCSDM_Menu[Player->entindex()].Create("CSDM: Spawn Manager", false, (void*)this->MenuHandle);
 
 		gCSDM_Menu[Player->entindex()].AddItem("1", "Add current position to Spawn", false);
 
@@ -161,7 +161,7 @@ void CCSDM_SpawnEdit::MenuHandle(int EntityIndex, P_MENU_ITEM Item)
 
 void CCSDM_SpawnEdit::AddSpawnMenu(CBasePlayer* Player)
 {
-	gCSDM_Menu[Player->entindex()].Create("CSDM: Add Spawns Menu", false, this->AddSpawnMenuHandle);
+	gCSDM_Menu[Player->entindex()].Create("CSDM: Add Spawns Menu", false, (void*)this->AddSpawnMenuHandle);
 
 	gCSDM_Menu[Player->entindex()].AddItem("1", "Add Current Postion as a random spawn", false);
 	gCSDM_Menu[Player->entindex()].AddItem("2", "Add Current Postion as a T spawn", false);
@@ -211,7 +211,7 @@ void CCSDM_SpawnEdit::AddSpawnMenuHandle(int EntityIndex, P_MENU_ITEM Item)
 
 void CCSDM_SpawnEdit::DiscardChanges(CBasePlayer* Player)
 {
-	gCSDM_Menu[Player->entindex()].Create("You want to discard all changes and exit editor?", false, this->DiscardChangesHandle);
+	gCSDM_Menu[Player->entindex()].Create("You want to discard all changes and exit editor?", false, (void*)this->DiscardChangesHandle);
 
 	gCSDM_Menu[Player->entindex()].AddItem("1", "No, continue editing", false);
 
