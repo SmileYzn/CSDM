@@ -148,16 +148,19 @@ void CCSDM_Misc::PlayerKilled(CBasePlayer* Victim, CBasePlayer* Killer)
 
 			if (this->m_kill_sound->value > 0.0f)
 			{
-				if (Victim->m_bHeadshotKilled)
+				if (!Killer->IsBot())
 				{
-					if (this->m_kill_sound->value == 2.0f)
+					if (Victim->m_bHeadshotKilled)
+					{
+						if (this->m_kill_sound->value == 2.0f)
+						{
+							g_engfuncs.pfnClientCommand(Killer->edict(), "%s", "speak \"sound/fvox/blip.wav\"\n");
+						}
+					}
+					else
 					{
 						g_engfuncs.pfnClientCommand(Killer->edict(), "%s", "speak \"sound/fvox/blip.wav\"\n");
 					}
-				}
-				else
-				{
-					g_engfuncs.pfnClientCommand(Killer->edict(), "%s", "speak \"sound/fvox/blip.wav\"\n");
 				}
 			}
 
