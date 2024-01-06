@@ -152,12 +152,12 @@ void CCSDM_Misc::PlayerKilled(CBasePlayer* Victim, CBasePlayer* Killer)
 				{
 					if (this->m_kill_sound->value == 2.0f)
 					{
-						g_engfuncs.pfnClientCommand(Killer->edict(), "speak \"sound/fvox/blip.wav\"\n");
+						g_engfuncs.pfnClientCommand(Killer->edict(), "%s", "speak \"sound/fvox/blip.wav\"\n");
 					}
 				}
 				else
 				{
-					g_engfuncs.pfnClientCommand(Killer->edict(), "speak \"sound/fvox/blip.wav\"\n");
+					g_engfuncs.pfnClientCommand(Killer->edict(), "%s", "speak \"sound/fvox/blip.wav\"\n");
 				}
 			}
 
