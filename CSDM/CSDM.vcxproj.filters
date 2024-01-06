@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="MetaMod">
+      <UniqueIdentifier>{3320b289-1ad6-41dd-b6d9-8e97c1a992dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MetaMod\MetaDLL">
+      <UniqueIdentifier>{3001530f-de07-41f5-b6e5-72a8845ff1c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MetaMod\MetaEngine">
+      <UniqueIdentifier>{da3c82ff-52d5-44b5-b009-088fca686971}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CSDM">
+      <UniqueIdentifier>{8cba722c-05c8-4bc7-83ad-3a77afa6fba1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CSDM\CSDM">
+      <UniqueIdentifier>{fe14a8d3-12e4-4b91-ac6d-bc2588bbff7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MetaMod\MetaMod">
+      <UniqueIdentifier>{0350708b-1b05-4dda-88ca-7acd2844ce87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{2cae333b-7669-4941-b91e-0d59a6e02e17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CSDM\CSDM_Util">
+      <UniqueIdentifier>{4866b84e-36af-448b-86bf-5a7706b0e9db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CSDM\CSDM_Config">
+      <UniqueIdentifier>{f1cc968e-8426-4ef1-bc27-c8bbb36a8123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReAPI">
+      <UniqueIdentifier>{3f400488-f965-46df-adf2-db0d63cdfc2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReGameDLL">
+      <UniqueIdentifier>{dc50696e-3690-48a5-995e-5d4f4fbd36d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CSDM\CSDM_Spawn">
+      <UniqueIdentifier>{93df375d-c683-4478-b35a-b2c179c73eb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CSDM\CSDM_Menu">
+      <UniqueIdentifier>{6fdc76ee-9961-4b57-9491-13fe8a80e66e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CSDM\CSDM_Weapon">
+      <UniqueIdentifier>{28dd2a6e-b9aa-4f91-97f0-2c3fc339d20d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CSDM\CSDM_SpawnEdit">
+      <UniqueIdentifier>{1d0107a7-dd8f-4bb2-982b-5ed487249fed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CSDM\CSDM_Command">
+      <UniqueIdentifier>{467b580a-5e5e-406e-8a22-b77a33506d8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CSDM\CSDM_Misc">
+      <UniqueIdentifier>{417c8395-345c-481f-abfc-388f5f3ec647}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CSDM.cpp">
+      <Filter>CSDM\CSDM</Filter>
+    </ClCompile>
+    <ClCompile Include="precompiled.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="Metamod.cpp">
+      <Filter>MetaMod\MetaMod</Filter>
+    </ClCompile>
+    <ClCompile Include="MetaDLL.cpp">
+      <Filter>MetaMod\MetaDLL</Filter>
+    </ClCompile>
+    <ClCompile Include="MetaEngine.cpp">
+      <Filter>MetaMod\MetaEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="CSDM_Util.cpp">
+      <Filter>CSDM\CSDM_Util</Filter>
+    </ClCompile>
+    <ClCompile Include="CSDM_Config.cpp">
+      <Filter>CSDM\CSDM_Config</Filter>
+    </ClCompile>
+    <ClCompile Include="ReAPI.cpp">
+      <Filter>ReAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="ReGameDLL.cpp">
+      <Filter>ReGameDLL</Filter>
+    </ClCompile>
+    <ClCompile Include="CSDM_Spawn.cpp">
+      <Filter>CSDM\CSDM_Spawn</Filter>
+    </ClCompile>
+    <ClCompile Include="CSDM_Menu.cpp">
+      <Filter>CSDM\CSDM_Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="CSDM_Weapon.cpp">
+      <Filter>CSDM\CSDM_Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="CSDM_SpawnEdit.cpp">
+      <Filter>CSDM\CSDM_SpawnEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="CSDM_Vampire.cpp">
+      <Filter>CSDM\CSDM_Vampire</Filter>
+    </ClCompile>
+    <ClCompile Include="CSDM_Misc.cpp">
+      <Filter>CSDM\CSDM_Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="CSDM_Command.cpp">
+      <Filter>CSDM\CSDM_Command</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CSDM.h">
+      <Filter>CSDM\CSDM</Filter>
+    </ClInclude>
+    <ClInclude Include="precompiled.h">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="Metamod.h">
+      <Filter>MetaMod\MetaMod</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaDLL.h">
+      <Filter>MetaMod\MetaDLL</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaEngine.h">
+      <Filter>MetaMod\MetaEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="CSDM_Util.h">
+      <Filter>CSDM\CSDM_Util</Filter>
+    </ClInclude>
+    <ClInclude Include="CSDM_Config.h">
+      <Filter>CSDM\CSDM_Config</Filter>
+    </ClInclude>
+    <ClInclude Include="ReAPI.h">
+      <Filter>ReAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="ReGameDLL.h">
+      <Filter>ReGameDLL</Filter>
+    </ClInclude>
+    <ClInclude Include="CSDM_Spawn.h">
+      <Filter>CSDM\CSDM_Spawn</Filter>
+    </ClInclude>
+    <ClInclude Include="CSDM_Menu.h">
+      <Filter>CSDM\CSDM_Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="CSDM_Weapon.h">
+      <Filter>CSDM\CSDM_Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="CSDM_SpawnEdit.h">
+      <Filter>CSDM\CSDM_SpawnEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="CSDM_Misc.h">
+      <Filter>CSDM\CSDM_Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="CSDM_Command.h">
+      <Filter>CSDM\CSDM_Command</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CSDM.def">
+      <Filter>CSDM</Filter>
+    </None>
+  </ItemGroup>
+</Project>
