@@ -51,7 +51,7 @@ private:
 	cvar_t* m_kd_ratio_hud;
 	cvar_t* m_reload_on_kill;
 
-	const char* m_HitGroup[9] ={ "Generic", "Head", "Chest", "Somach", "Left Arm", "Right Arm", "Left Leg", "Right Leg", "Shield"};
+	const char* m_HitGroup[9] ={ "Generic", "Head", "Chest", "Stomach", "Left Arm", "Right Arm", "Left Leg", "Right Leg", "Shield"};
 
 	std::map<int, int> m_Headshots;
 };
