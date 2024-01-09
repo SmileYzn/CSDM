@@ -129,38 +129,27 @@ void CCSDM_Misc::PlayerKilled(CBasePlayer* Victim, CBasePlayer* Killer)
 			if (Victim->m_bHeadshotKilled)
 			{
 				this->m_Headshots[Killer->entindex()]++;
-			}
 
-			if (this->m_kill_fade->value > 0.0f)
-			{
-				if (Victim->m_bHeadshotKilled)
-				{
-					if (this->m_kill_fade->value == 2.0f)
-					{
-						gCSDM_Util.ScreenFade(Killer->edict(), BIT(10), BIT(10), 0x0000, 0, 0, 200, 75);
-					}
-				}
-				else
+				if (this->m_kill_fade->value == 2.0f)
 				{
 					gCSDM_Util.ScreenFade(Killer->edict(), BIT(10), BIT(10), 0x0000, 0, 0, 200, 75);
 				}
-			}
 
-			if (this->m_kill_sound->value > 0.0f)
-			{
-				if (!Killer->IsBot())
+				if (this->m_kill_sound->value == 2.0f)
 				{
-					if (Victim->m_bHeadshotKilled)
-					{
-						if (this->m_kill_sound->value == 2.0f)
-						{
-							g_engfuncs.pfnClientCommand(Killer->edict(), "%s", "speak \"sound/fvox/blip.wav\"\n");
-						}
-					}
-					else
-					{
-						g_engfuncs.pfnClientCommand(Killer->edict(), "%s", "speak \"sound/fvox/blip.wav\"\n");
-					}
+					g_engfuncs.pfnClientCommand(Killer->edict(), "%s", "speak \"sound/fvox/blip.wav\"\n");
+				}
+			}
+			else
+			{
+				if (this->m_kill_fade->value == 1.0f)
+				{
+					gCSDM_Util.ScreenFade(Killer->edict(), BIT(10), BIT(10), 0x0000, 0, 0, 200, 75);
+				}
+
+				if (this->m_kill_sound->value == 1.0f)
+				{
+					g_engfuncs.pfnClientCommand(Killer->edict(), "%s", "speak \"sound/fvox/blip.wav\"\n");
 				}
 			}
 
@@ -194,7 +183,7 @@ void CCSDM_Misc::PlayerKilled(CBasePlayer* Victim, CBasePlayer* Killer)
 				}
 			}
 
-			if (this->m_reload_on_kill->value || 1)
+			if (this->m_reload_on_kill->value > 0.0f)
 			{
 				if (Killer->m_pActiveItem)
 				{
@@ -259,32 +248,6 @@ int CCSDM_Misc::AddAccount(CBasePlayer* Player, int Amount)
 
 	return Amount;
 }
-
-/*
-#include <amxmodx>
-
-#define PLUGIN  "Only Your Info on DM"
-#define VERSION "0.1"
-#define AUTHOR  "Dev-cs.ru"
-
-public plugin_init()
-{
-	register_plugin(PLUGIN, VERSION, AUTHOR)
-		register_message(get_user_msgid("DeathMsg"), "msg_deathMsg")
-}
-public msg_deathMsg(msgid, dest, receiver)
-{
-	enum { arg_killer = 1, arg_victim };
-
-	new killer = get_msg_arg_int(arg_killer);
-	new victim = get_msg_arg_int(arg_victim);
-
-	if (killer == receiver || victim == receiver) {
-		return PLUGIN_CONTINUE;
-	}
-
-	return PLUGIN_HANDLED;
-}*/
 
 bool CCSDM_Misc::SendDeathMessage(CBaseEntity* Killer, CBasePlayer* Victim, CBasePlayer* Assister, entvars_t* pevInflictor, const char* killerWeaponName, int iDeathMessageFlags, int iRarityOfKill)
 {
