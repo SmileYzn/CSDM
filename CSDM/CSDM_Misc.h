@@ -58,22 +58,3 @@ private:
 
 extern CCSDM_Misc gCSDM_Misc;
 
-// Only HS (0, 1)
-
-// Kill Screenfade (0, 1)
-// Kill Sound (0, 1)
-
-// Hits indicator
-// Point Symbol   (1)
-// >      <	      (2)
-// Damage         (3)
-// Place          (4)
-
-// Hide other killfeed (0, 1)
-
-// Show money as frags (0, 1)
-
-// Show KD Ratio (0, 1)
-
-// ??
-// Say /menu or press 'G' key
