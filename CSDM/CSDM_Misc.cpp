@@ -14,6 +14,8 @@ void CCSDM_Misc::ServerActivate()
 
 	this->m_kill_hp_hs = gCSDM_Util.CvarRegister("csdm_kill_hp_hs", "40");
 
+	this->m_kill_repair_armor = gCSDM_Util.CvarRegister("csdm_kill_repair_armor", "1");
+
 	this->m_kill_msg = gCSDM_Util.CvarRegister("csdm_kill_hp_msg", "1");
 
 	this->m_hit_indicator = gCSDM_Util.CvarRegister("csdm_hit_indicator", "0");
@@ -126,64 +128,43 @@ void CCSDM_Misc::PlayerKilled(CBasePlayer* Victim, CBasePlayer* Killer)
 	{
 		if (Victim->IsPlayer() && Killer->IsPlayer())
 		{
+			auto RestoreHealth = this->m_kill_hp->value;
+
+			auto HeadshotCheck = 1.0f;
+
 			if (Victim->m_bHeadshotKilled)
 			{
 				this->m_Headshots[Killer->entindex()]++;
 
-				if (this->m_kill_fade->value == 2.0f)
-				{
-					gCSDM_Util.ScreenFade(Killer->edict(), BIT(10), BIT(10), 0x0000, 0, 0, 200, 75);
-				}
+				HeadshotCheck = 2.0f;
 
-				if (this->m_kill_sound->value == 2.0f)
+				if (this->m_kill_hp_hs->value > 0.0f)
 				{
-					g_engfuncs.pfnClientCommand(Killer->edict(), "%s", "speak \"sound/fvox/blip.wav\"\n");
+					RestoreHealth = this->m_kill_hp_hs->value;
 				}
 			}
-			else
+
+			if (RestoreHealth > 0.0f)
 			{
-				if (this->m_kill_fade->value == 1.0f)
-				{
-					gCSDM_Util.ScreenFade(Killer->edict(), BIT(10), BIT(10), 0x0000, 0, 0, 200, 75);
-				}
-
-				if (this->m_kill_sound->value == 1.0f)
-				{
-					g_engfuncs.pfnClientCommand(Killer->edict(), "%s", "speak \"sound/fvox/blip.wav\"\n");
-				}
+				Killer->edict()->v.health = clamp(Killer->edict()->v.health + RestoreHealth, 1.0f, 100.0f);
 			}
 
-			if (this->m_kill_hp->value > 0.0f || this->m_kill_hp_hs->value > 0.0f)
+			if (this->m_kill_repair_armor->value == HeadshotCheck)
 			{
-				if (Killer->edict()->v.health < 100.0f)
-				{
-					auto Health = clamp(this->m_kill_hp->value, 1.0f, 100.0f);
-
-					if (Victim->m_bHeadshotKilled)
-					{
-						if (this->m_kill_hp_hs->value > 0.0f)
-						{
-							Health = clamp(this->m_kill_hp_hs->value, 1.0f, 100.0f);
-						}
-					}
-
-					Killer->edict()->v.health = clamp(Killer->edict()->v.health + Health, 1.0f, 100.0f);
-
-					Killer->edict()->v.armorvalue = 100.0f;
-				}
+				Killer->edict()->v.armorvalue = 100.0f;
 			}
 
-			if (this->m_kill_msg->value)
+			if (this->m_kill_fade->value == HeadshotCheck)
 			{
-				auto Value = static_cast<int>((Killer->edict()->v.health - Killer->m_iLastClientHealth));
-
-				if (Value > 0)
-				{
-					gCSDM_Util.ShowHudMessage(Killer->edict(), gCSDM_Util.SetHudParam(0, 255, 0, -1.0f, 0.8f, 0, 1.0f, 1.0f, 0.0f, 0.0f, 1), "+%d HP", Value);
-				}
+				gCSDM_Util.ScreenFade(Killer->edict(), BIT(10), BIT(10), 0x0000, 0, 0, 200, 75);
 			}
 
-			if (this->m_reload_on_kill->value > 0.0f)
+			if (this->m_kill_sound->value == HeadshotCheck)
+			{
+				g_engfuncs.pfnClientCommand(Killer->edict(), "%s", "speak \"sound/fvox/blip.wav\"\n");
+			}
+
+			if (this->m_reload_on_kill->value == HeadshotCheck)
 			{
 				if (Killer->m_pActiveItem)
 				{
@@ -191,6 +172,16 @@ void CCSDM_Misc::PlayerKilled(CBasePlayer* Victim, CBasePlayer* Killer)
 					{
 						Killer->CSPlayer()->ReloadWeapons(Killer->m_pActiveItem, true, true);
 					}
+				}
+			}
+
+			if (this->m_kill_msg->value)
+			{
+				auto Value = (int)(Killer->edict()->v.health - (float)(Killer->m_iLastClientHealth));
+
+				if (Value > 0)
+				{
+					gCSDM_Util.ShowHudMessage(Killer->edict(), gCSDM_Util.SetHudParam(0, 255, 0, -1.0f, 0.8f, 0, 1.0f, 1.0f, 0.0f, 0.0f, 1), "+%d HP", Value);
 				}
 			}
 		}

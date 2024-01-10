@@ -132,6 +132,11 @@ void CCSDM_Weapon::CBasePlayer_SetAnimation(IReGameHook_CBasePlayer_SetAnimation
 void CCSDM_Weapon::ResetPlayer(CBasePlayer* Player)
 {
 	this->m_Info[Player->entindex()].Reset();
+
+	if (!Player->IsBot())
+	{
+		gCSDM_Util.SayText(Player->edict(), PRINT_TEAM_DEFAULT, "Press ^3'G'^1 or type ^3'guns'^1 in chat to re-enable your equip menu.");
+	}
 }
 
 void CCSDM_Weapon::EquipItem(CBasePlayer* Player, InventorySlotType SlotType, std::string Item)
@@ -225,21 +230,36 @@ bool CCSDM_Weapon::EquipLast(CBasePlayer* Player)
 	return Result;
 }
 
-void CCSDM_Weapon::SetHideMenu(CBasePlayer* Player, bool HideMenu)
+bool CCSDM_Weapon::SetHideMenu(CBasePlayer* Player, bool HideMenu)
 {
 	if (Player)
 	{
-		if (HideMenu)
+		if (this->m_Enabled)
 		{
-			gCSDM_Util.SayText(Player->edict(), PRINT_TEAM_RED, "Type ^4'/guns'^1 in chat to re-enable your equip menu.");
-		}
-		else
-		{
-			gCSDM_Util.SayText(Player->edict(), PRINT_TEAM_BLUE, "Your equip menu has been re-enabled.");
-		}
+			auto EntityIndex = Player->entindex();
 
-		this->m_Info[Player->entindex()].HideMenu = HideMenu;
+			if (HideMenu)
+			{
+				if (!this->m_Info[EntityIndex].HideMenu)
+				{
+					gCSDM_Util.SayText(Player->edict(), PRINT_TEAM_DEFAULT, "Press ^3'G'^1 or type ^3'guns'^1 in chat to re-enable your equip menu.");
+				}
+			}
+			else
+			{
+				if (this->m_Info[EntityIndex].HideMenu)
+				{
+					gCSDM_Util.SayText(Player->edict(), PRINT_TEAM_DEFAULT, "Your equip menu has been re-enabled.");
+				}
+			}
+
+			this->m_Info[EntityIndex].HideMenu = HideMenu;
+
+			return true;
+		}
 	}
+
+	return false;
 }
 
 bool CCSDM_Weapon::GetHideMenu(int EntityIndex)

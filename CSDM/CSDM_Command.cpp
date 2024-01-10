@@ -31,16 +31,25 @@ bool CCSDM_Command::ClientCommand(edict_t* pEntity)
 							}
 						}
 					}
+					else if (!Q_strcmp(pCmd, "drop"))
+					{
+						if (gCSDM_Weapon.SetHideMenu(Player, false))
+						{
+							return true;
+						}
+					}
 					else if (!Q_strcmp(pCmd, "say") || !Q_strcmp(pCmd, "say_team"))
 					{
 						if (pArg1)
 						{
 							if (pArg1[0u] != '\0')
 							{
-								if (Q_strstr(pArg1, "/guns") != nullptr)
+								if (Q_strstr(pArg1, "guns") != nullptr)
 								{
-									gCSDM_Weapon.SetHideMenu(Player, false);
-									return true;
+									if (gCSDM_Weapon.SetHideMenu(Player, false))
+									{
+										return true;
+									}
 								}
 							}
 						}

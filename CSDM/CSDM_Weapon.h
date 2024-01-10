@@ -43,7 +43,7 @@ public:
 	void EquipRandom(CBasePlayer* Player, int Slot);
 	bool EquipLast(CBasePlayer* Player);
 
-	void SetHideMenu(CBasePlayer* Player, bool HideMenu);
+	bool SetHideMenu(CBasePlayer* Player, bool HideMenu);
 	bool GetHideMenu(int EntityIndex);
 
 	void SetWeaponState(int EntityIndex, CBasePlayerWeapon* Weapon);

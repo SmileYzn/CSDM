@@ -44,6 +44,7 @@ private:
 	cvar_t* m_kill_sound;
 	cvar_t* m_kill_hp;
 	cvar_t* m_kill_hp_hs;
+	cvar_t* m_kill_repair_armor;
 	cvar_t* m_kill_msg;
 	cvar_t* m_hit_indicator;
 	cvar_t* m_hide_kill_feed;
