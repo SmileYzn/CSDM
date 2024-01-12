@@ -20,7 +20,7 @@ void CCSDM_Misc::ServerActivate()
 
 	this->m_hit_indicator = gCSDM_Util.CvarRegister("csdm_hit_indicator", "0");
 
-	this->m_hide_kill_feed = gCSDM_Util.CvarRegister("csdm_hide_kill_feed", "1");
+	this->m_hide_kill_feed = gCSDM_Util.CvarRegister("csdm_hide_kill_feed", "0");
 
 	this->m_money_as_frags = gCSDM_Util.CvarRegister("csdm_money_as_frags", "0");
 
