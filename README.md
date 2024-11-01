@@ -2,7 +2,7 @@
 
 <p align="center">Counter Strike 1.6 Deathmatch Plugin for ReGameDLL_CS</p>
 
-## Console Variables
+## Console Variables 
 <details>
   <summary>Click to expand</summary>
 
