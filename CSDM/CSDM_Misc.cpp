@@ -149,22 +149,22 @@ void CCSDM_Misc::PlayerKilled(CBasePlayer* Victim, CBasePlayer* Killer)
 				Killer->edict()->v.health = clamp(Killer->edict()->v.health + RestoreHealth, 1.0f, 100.0f);
 			}
 
-			if (this->m_kill_repair_armor->value == HeadshotCheck)
+			if (this->m_kill_repair_armor->value >= HeadshotCheck)
 			{
 				Killer->edict()->v.armorvalue = 100.0f;
 			}
 
-			if (this->m_kill_fade->value == HeadshotCheck)
+			if (this->m_kill_fade->value >= HeadshotCheck)
 			{
 				gCSDM_Util.ScreenFade(Killer->edict(), BIT(10), BIT(10), 0x0000, 0, 0, 200, 75);
 			}
 
-			if (this->m_kill_sound->value == HeadshotCheck)
+			if (this->m_kill_sound->value >= HeadshotCheck)
 			{
 				g_engfuncs.pfnClientCommand(Killer->edict(), "%s", "speak \"sound/fvox/blip.wav\"\n");
 			}
 
-			if (this->m_reload_on_kill->value == HeadshotCheck)
+			if (this->m_reload_on_kill->value >= HeadshotCheck)
 			{
 				if (Killer->m_pActiveItem)
 				{
