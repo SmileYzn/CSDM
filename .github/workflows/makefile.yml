@@ -57,17 +57,9 @@ jobs:
 
         # Unzip hitbox_fixer library to metamod folder
         unzip -p hitbox_fix-bin*.zip addons/hitbox_fix/hitbox_fix_mm_i386.so > publish/addons/hitbox_fix/hitbox_fix_mm_i386.so
-
-    - name: Download accuracy-fix
-      run: |
-        # Get latest release version of accuracy-fix
-        wget --quiet https://github.com/SmileYzn/AccuracyFix/releases/download/1.0.4/accuracyfix-linux.zip
-
-        # Unzip accuracy-fix library to metamod folder
-        unzip -p accuracyfix-linux.zip addons/accuracyfix/dlls/accuracyfix_mm.so > publish/addons/accuracyfix/accuracyfix_mm.so
-
+        
     - name: Deploy artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: csdm-linux
         path: publish/*
