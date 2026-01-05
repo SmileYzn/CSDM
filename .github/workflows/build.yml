@@ -1,10 +1,21 @@
-name: Build C/C++
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+#
+# https://github.com/actions/checkout/issues/1590#issuecomment-2567109195
+#
+# We manually start a container and execute scripts in it instead of using `jobs.build.container`,
+# otherwise we couldn't use GitHub-provided actions (checkout, cache, etc.) as they rely on Node20
+# which would not necessarily be available on some containers (e.g., Ubuntu 18.04).
+#
+# See: https://github.com/actions/checkout/issues/1590
+#
+# If you need to pass environment variables from the GitHub host runner to the Docker container,
+# you can do so by adding `-e MY_VAR` to the docker run command, for example:
+#
+#    docker run --name build-container -d -e GITHUB_REPOSITORY -v ...
+#
+name: Action Build System
+on: [push]
+env:
+  CONTAINER: ubuntu:18.04
 
 jobs:
   linux:
@@ -12,201 +23,89 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Setup Checkout
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-    - name: Add i386 architecture
-      run: sudo dpkg --add-architecture i386
-      
-    - name: Update repository
-      run: sudo apt-get update
-
-    - name: Install build dependencies
-      run: sudo apt-get install -qq -y wget unzip
-
-    - name: Instal GCC G++ 4.8 (multilib)
+    - name: Start Docker Container
       run: |
-        mkdir temp
-        cd temp
-        # amd64
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/g++-4.8_4.8.5-4ubuntu8_amd64.deb
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/libstdc++-4.8-dev_4.8.5-4ubuntu8_amd64.deb
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/gcc-4.8-base_4.8.5-4ubuntu8_amd64.deb
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/gcc-4.8_4.8.5-4ubuntu8_amd64.deb
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/libgcc-4.8-dev_4.8.5-4ubuntu8_amd64.deb
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/cpp-4.8_4.8.5-4ubuntu8_amd64.deb
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/libasan0_4.8.5-4ubuntu8_amd64.deb
-        sudo apt install ./gcc-4.8_4.8.5-4ubuntu8_amd64.deb ./gcc-4.8-base_4.8.5-4ubuntu8_amd64.deb ./libstdc++-4.8-dev_4.8.5-4ubuntu8_amd64.deb ./cpp-4.8_4.8.5-4ubuntu8_amd64.deb ./libgcc-4.8-dev_4.8.5-4ubuntu8_amd64.deb ./libasan0_4.8.5-4ubuntu8_amd64.deb ./g++-4.8_4.8.5-4ubuntu8_amd64.deb
-        
-        # i386
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/g++-4.8_4.8.5-4ubuntu8_i386.deb
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/libstdc++-4.8-dev_4.8.5-4ubuntu8_i386.deb
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/gcc-4.8-base_4.8.5-4ubuntu8_i386.deb
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/gcc-4.8_4.8.5-4ubuntu8_i386.deb
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/libgcc-4.8-dev_4.8.5-4ubuntu8_i386.deb
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/cpp-4.8_4.8.5-4ubuntu8_i386.deb
-        wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gcc-4.8/libasan0_4.8.5-4ubuntu8_i386.deb
-        sudo apt install ./gcc-4.8_4.8.5-4ubuntu8_i386.deb ./gcc-4.8-base_4.8.5-4ubuntu8_i386.deb ./libstdc++-4.8-dev_4.8.5-4ubuntu8_i386.deb ./cpp-4.8_4.8.5-4ubuntu8_i386.deb ./libgcc-4.8-dev_4.8.5-4ubuntu8_i386.deb ./libasan0_4.8.5-4ubuntu8_i386.deb ./g++-4.8_4.8.5-4ubuntu8_i386.deb
-        
-    - name: Update GCC and G++ alternatives
-      run: |
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
-        sudo update-alternatives --config gcc
-        sudo update-alternatives --config g++
+        docker pull $CONTAINER
+        docker run --name build-container -d -v ${{github.workspace}}:/desktop $CONTAINER tail -f /dev/null
 
-    - name: Run build
-      working-directory: ./CSDM
-      run: make
+    - name: Install Development Tools Packages
+      env:
+        SCRIPT: |
+          # Add i386 architecture
+          dpkg --add-architecture i386
 
-    - name: Make Match BOT path
-      run: mkdir -p publish/addons/csdm/dlls
+          # Update repository
+          apt-get update > /dev/null
 
-    - name: Move released file to dlls
-      run: mv ./CSDM/Release/csdm_mm.so publish/addons/csdm/dlls
+          # Install build dependencies
+          apt-get install -qq -y wget unzip build-essential gcc-4.8-multilib g++-4.8-multilib libgcc1:i386 libcurl4-openssl-dev:i386 zlib1g-dev:i386 libssl-dev:i386 > /dev/null
 
-    - name: Copy cstrike contents to publish dir
-      run: cp -ar cstrike/. publish
+          # Update alternatives
+          update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 100 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
+      run: docker exec build-container bash -c "$SCRIPT"
 
-    - name: Get latest release version of metamod-r
-      run: wget --quiet https://github.com/rehlds/Metamod-R/releases/download/1.3.0.149/metamod-bin-1.3.0.149.zip
+    - name: Execute Build
+      env:
+        SCRIPT: |
+          # Open makefile directory
+          cd /desktop/CSDM
 
-    - name: Unzip metamod library to metamod folder
-      run: unzip -p metamod-bin*.zip addons/metamod/metamod_i386.so > publish/addons/metamod/metamod_i386.so
+          # Make Release Directory
+          mkdir -p Release
 
-    - name: Get latest release version of hitbox_fixer
-      run: wget --quiet https://github.com/Garey27/hitbox_fixer/releases/download/2.0.3/hitbox_fix-bin-2.0.3.zip
+          # Make linux (Without post build script)
+          make
 
-    - name: Unzip hitbox_fixer library to metamod folder
-      run: unzip -p hitbox_fix-bin*.zip addons/hitboxfixer/hitbox_fix_mm_i386.so > publish/addons/hitboxfixer/hitbox_fix_mm_i386.so
+          # Make dlls path
+          mkdir -p ../cstrike/addons/csdm/dlls
 
-    - name: Download Accuracy Fix
-      run: wget --quiet https://github.com/SmileYzn/AccuracyFix/releases/download/1.1.16/linux32.zip
+          # Copy release file
+          cp ./Release/csdm_mm.so ../cstrike/addons/csdm/dlls
 
-    - name: Unzip accuracy-fix library to metamod folder
-      run: unzip -p linux32.zip addons/accuracyfix/dlls/accuracyfix_mm.so > publish/addons/accuracyfix/accuracyfix_mm.so
+      run: docker exec build-container bash -c "$SCRIPT"
 
     - name: Deploy artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: linux32
-        path: publish/*
+        path: ${{github.workspace}}/cstrike
+        compression-level: 9
         
   windows:
     name: Windows Build
     runs-on: windows-latest
-      
-    env:
-      SOLUTION_FILE_PATH: .
-      BUILD_CONFIGURATION: Release
   
     steps:
-    - name: Setup Checkout
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
 
-    - name: Restore NuGet packages
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
-
-    - name: Run Build
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
-
-    - name: Move release file to publish
-      working-directory: ${{env.GITHUB_WORKSPACE}}
+    - name: Execute Build
       run: |
-        # Make publish directory
-        mkdir publish\addons\csdm\dlls
+        # Open directory
+        cd PugMod
 
-        # Move cstrike files to publish
-        copy ${{env.SOLUTION_FILE_PATH}}\cstrike\* publish -Recurse -Force
+        # Make Release directory
+        mkdir -p Release
 
-        # Move released dll to publish
-        copy ${{env.BUILD_CONFIGURATION}}\*.dll publish\addons\csdm\dlls -Recurse -Force
+        # Execute Build
+        msbuild CSDM.vcxproj -property:configuration=Release -nologo -verbosity:minimal
 
-    - name: Download Metamod-r
-      run: |
-        # Set assets data
-        $assets = "https://github.com/rehlds/Metamod-R/releases/download/1.3.0.149/metamod-bin-1.3.0.149.zip"
+        # Make dlls path
+        mkdir -p ../cstrike/addons/csdm/dlls
 
-        # Get ZIP file name
-        $zipName = "metamod-bin-1.3.0.138.zip"
-
-        # Download ZIP file
-        Invoke-WebRequest -Uri $assets -Out $zipName
-
-        # Extract ZIP File
-        Expand-Archive $zipName
-
-        # Get base name from ZIP file
-        $baseName = (Get-Item $zipName).BaseName
-
-        # DLL from path
-        $fromPath = ".\" + $baseName + "\addons\metamod\metamod.dll"
-
-        # DLL dest path
-        $DestPath = ".\publish\addons\metamod\metamod.dll"
-        
-        # Copy item
-        Copy-Item -Path $fromPath -Destination $DestPath
-
-    - name: Download Hitbox Fixer
-      run: |
-        # Set assets data
-        $assets = "https://github.com/Garey27/hitbox_fixer/releases/download/2.0.3/hitbox_fix-bin-2.0.3.zip"
-
-        # Get ZIP file name
-        $zipName = "hitbox_fix-bin-1.1.5.zip"
-
-        # Download ZIP file
-        Invoke-WebRequest -Uri $assets -Out $zipName
-
-        # Extract ZIP File
-        Expand-Archive $zipName
-
-        # Get base name from ZIP file
-        $baseName = (Get-Item $zipName).BaseName
-
-        # DLL from path
-        $fromPath = ".\" + $baseName + "\addons\hitboxfixer\hitbox_fix_mm.dll"
-
-        # DLL dest path
-        $DestPath = ".\publish\addons\hitboxfixer\hitbox_fix_mm.dll"
-        
-        # Copy item
-        Copy-Item -Path $fromPath -Destination $DestPath
-
-    - name: Download Accuracy Fix
-      run: |
-        # Set assets data
-        $assets = "https://github.com/SmileYzn/AccuracyFix/releases/download/1.1.16/win32.zip"
-
-        # Get ZIP file name
-        $zipName = "win32.zip"
-
-        # Download ZIP file
-        Invoke-WebRequest -Uri $assets -Out $zipName
-
-        # Extract ZIP File
-        Expand-Archive $zipName
-
-        # Get base name from ZIP file
-        $baseName = (Get-Item $zipName).BaseName
-
-        # DLL from path
-        $fromPath = ".\" + $baseName + "\addons\accuracyfix\dlls\accuracyfix_mm.dll"
-
-        # DLL dest path
-        $DestPath = ".\publish\addons\accuracyfix\accuracyfix_mm.dll"
-        
-        # Copy item
-        Copy-Item -Path $fromPath -Destination $DestPath
+        # Copy release file
+        cp ./Release/csdm_mm.dll ../cstrike/addons/csdm/dlls
 
     - name: Deploy artifacts
       uses: actions/upload-artifact@v4
       with:
         name: win32
-        path: publish/*
+        path: ${{github.workspace}}/cstrike
+        compression-level: 9
+
+
+      
