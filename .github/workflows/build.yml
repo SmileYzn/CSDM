@@ -86,7 +86,7 @@ jobs:
     - name: Execute Build
       run: |
         # Open directory
-        cd PugMod
+        cd CSDM
 
         # Make Release directory
         mkdir -p Release
